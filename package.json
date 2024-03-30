@@ -1,0 +1,17 @@
+{
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "name": "pos",
+  "version": "1.0.0",
+  "main": "index.js",
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"cd Admin && npm run dev\" \"nodemon Backend/index.js\""
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": ""
+}
