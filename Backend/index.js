@@ -3,7 +3,7 @@ const cors = require("cors");
 const express = require("express");
 const app = express();
 const PORT = process.env.PORT;
-const { dbConnect } = require("./config/DbConnect");
+const { dbConnect } = require("./config/dbConnect");
 const morgan = require("morgan");
 dbConnect();
 app.use(morgan("dev"));
