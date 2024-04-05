@@ -123,11 +123,6 @@ const profile = () => {
               </ul>
             </Card>
           </div>
-          <div className="lg:col-span-8 col-span-12">
-            <Card title="User Overview">
-              <BasicArea height={190} />
-            </Card>
-          </div>
         </div>
       </div>
     </div>

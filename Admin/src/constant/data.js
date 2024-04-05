@@ -13,266 +13,27 @@ export const menuItems = [
   },
   {
     title: "Invoice",
-    icon: "heroicons-outline:document",
+    icon: "mingcute:bill-line",
     isHide: true,
     link: "invoice",
   },
   {
     title: "Accounts",
-    icon: "heroicons-outline:document",
+    icon: "mdi:badge-account-horizontal",
     isHide: true,
     link: "account",
   },
   {
     title: "Transaction",
-    icon: "heroicons-outline:document",
+    icon: "grommet-icons:transaction",
     isHide: true,
     link: "transaction",
   },
 
   // {
   //   isHeadr: true,
-  //   title: "apps",
+  //   title: "Pages",
   // },
-
-  {
-    title: "Projects",
-    icon: "heroicons-outline:document",
-    link: "#",
-    isHide: true,
-    child: [
-      {
-        childtitle: "Projects",
-        childlink: "projects",
-      },
-      {
-        childtitle: "Project Details",
-        childlink: "project-details",
-      },
-    ],
-  },
-  {
-    isHeadr: true,
-    title: "Pages",
-  },
-  {
-    title: "Authentication",
-    icon: "heroicons-outline:lock-closed",
-    link: "#",
-    child: [
-      {
-        childtitle: "Signin One",
-        childlink: "/",
-      },
-      {
-        childtitle: "Signup One",
-        childlink: "/register",
-      },
-
-      {
-        childtitle: "Forget Password One",
-        childlink: "/forgot-password",
-      },
-      {
-        childtitle: "Lock Screen One",
-        childlink: "/lock-screen",
-      },
-    ],
-  },
-  {
-    title: "Utility",
-    icon: "heroicons-outline:view-boards",
-    link: "#",
-    isHide: false,
-    child: [
-      {
-        childtitle: "Invoice",
-        childlink: "invoice",
-      },
-      {
-        childtitle: "Pricing",
-        childlink: "pricing",
-      },
-
-      {
-        childtitle: "FAQ",
-        childlink: "faq",
-      },
-      {
-        childtitle: "Blog",
-        childlink: "blog",
-      },
-      {
-        childtitle: "Blank page",
-        childlink: "blank-page",
-      },
-      {
-        childtitle: "Prfoile",
-        childlink: "profile",
-      },
-      {
-        childtitle: "Settings",
-        childlink: "settings",
-      },
-      {
-        childtitle: "404 page",
-        childlink: "/404",
-      },
-
-      {
-        childtitle: "Coming Soon",
-        childlink: "/coming-soon",
-      },
-      {
-        childtitle: "Under Maintanance page",
-        childlink: "/under-construction",
-      },
-    ],
-  },
-  {
-    isHeadr: true,
-    title: "Elements",
-  },
-  {
-    title: "Components",
-    icon: "heroicons-outline:collection",
-    link: "#",
-    child: [
-      {
-        childtitle: "Typography",
-        childlink: "typography",
-      },
-      {
-        childtitle: "Colors",
-        childlink: "colors",
-      },
-      {
-        childtitle: "Alert",
-        childlink: "alert",
-      },
-      {
-        childtitle: "Button",
-        childlink: "button",
-      },
-      {
-        childtitle: "Card",
-        childlink: "card",
-      },
-      {
-        childtitle: "Carousel",
-        childlink: "carousel",
-      },
-      {
-        childtitle: "Dropdown",
-        childlink: "dropdown",
-      },
-      {
-        childtitle: "Image",
-        childlink: "image",
-      },
-      {
-        childtitle: "Modal",
-        childlink: "modal",
-      },
-      {
-        childtitle: "Progress bar",
-        childlink: "progress-bar",
-      },
-      {
-        childtitle: "Placeholder",
-        childlink: "placeholder",
-      },
-      {
-        childtitle: "Tab & Accordion",
-        childlink: "tab-accordion",
-      },
-      {
-        childtitle: "Badges",
-        childlink: "badges",
-      },
-      {
-        childtitle: "Paginatins",
-        childlink: "paginations",
-      },
-      {
-        childtitle: "Video",
-        childlink: "video",
-      },
-      {
-        childtitle: "Tooltip & Popover",
-        childlink: "tooltip-popover",
-      },
-    ],
-  },
-  {
-    title: "Forms",
-    icon: "heroicons-outline:clipboard-list",
-    link: "#",
-    child: [
-      {
-        childtitle: "Input",
-        childlink: "input",
-      },
-      {
-        childtitle: "Input group",
-        childlink: "input-group",
-      },
-      {
-        childtitle: "Input layout",
-        childlink: "input-layout",
-      },
-      {
-        childtitle: "Form validation",
-        childlink: "form-validation",
-      },
-      {
-        childtitle: "Wizard",
-        childlink: "form-wizard",
-      },
-      {
-        childtitle: "Input mask",
-        childlink: "input-mask",
-      },
-      {
-        childtitle: "File input",
-        childlink: "file-input",
-      },
-      {
-        childtitle: "Form repeater",
-        childlink: "form-repeater",
-      },
-      {
-        childtitle: "Textarea",
-        childlink: "textarea",
-      },
-      {
-        childtitle: "Checkbox",
-        childlink: "checkbox",
-      },
-      {
-        childtitle: "Radio button",
-        childlink: "radio-button",
-      },
-      {
-        childtitle: "Switch",
-        childlink: "switch",
-      },
-      {
-        childtitle: "Select & Vue select",
-        childlink: "select",
-      },
-      {
-        childtitle: "Date time picker",
-        childlink: "date-time-picker",
-      },
-    ],
-  },
-
-  {
-    title: "Icons",
-    icon: "heroicons-outline:emoji-happy",
-    link: "icons",
-  },
 ];
 
 export const topMenu = [

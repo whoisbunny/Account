@@ -1,7 +1,4 @@
 import layout from "./layout";
-import todo from "../pages/app/todo/store";
-import chat from "../pages/app/chat/store";
-import project from "../pages/app/projects/store";
 
 // import auth from "../pages/auth/common/store";
 import auth from "./features/auth/authSlice";
@@ -16,8 +13,5 @@ const rootReducer = {
   account,
   transaction,
   layout,
-  todo,
-  chat,
-  project,
 };
 export default rootReducer;
