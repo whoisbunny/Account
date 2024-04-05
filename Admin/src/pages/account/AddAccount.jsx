@@ -50,6 +50,10 @@ const options = [
     value: "General",
     label: "General",
   },
+  {
+    value: "Cash",
+    label: "Cash",
+  },
 ];
 const AddAccount = () => {
   const { openAccountModal } = useSelector((state) => state.account);
@@ -73,7 +77,8 @@ const AddAccount = () => {
   });
 
   const onSubmit = (data) => {
-    data.type = data.type.value;
+    // data.type = data.type.value;
+    data.type = "Creditor";
 
     dispatch(addAccount(data));
     setTimeout(() => {
@@ -123,7 +128,7 @@ const AddAccount = () => {
             register={register}
             error={errors.address}
           />
-          <div className={errors.type ? "has-error" : ""}>
+          {/* <div className={errors.type ? "has-error" : ""}>
             <label className="form-label" htmlFor="icon_s">
               Account Type
             </label>
@@ -146,7 +151,7 @@ const AddAccount = () => {
                 {errors.type?.message || errors.type?.label.message}
               </div>
             )}
-          </div>
+          </div> */}
 
           <div className="ltr:text-right rtl:text-left">
             <button className="btn btn-dark  text-center">Add</button>

@@ -7,11 +7,13 @@ import Textarea from "@/components/ui/Textarea";
 import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import Flatpickr from "react-flatpickr";
 
 import Fileinput from "../../components/ui/Fileinput";
 import {
   addInvoice,
   getInvoice,
+  getInvoices,
   toggleAddModal,
 } from "../../store/features/invoice/invoiceSlice";
 import { getAccounts } from "../../store/features/account/accountSlice";
@@ -36,6 +38,8 @@ const styles = {
 
 const AddInvoice = () => {
   const { openInvoiceModal } = useSelector((state) => state.invoice);
+  const [picker, setPicker] = useState(new Date());
+
   const dispatch = useDispatch();
   useEffect(() => {
     dispatch(getAccounts());
@@ -76,6 +80,7 @@ const AddInvoice = () => {
       total,
     } = data;
 
+    data.invoiceDate = picker;
     data.partyName = data.partyName.value;
     data.grossTotal;
 
@@ -93,7 +98,7 @@ const AddInvoice = () => {
 
     dispatch(addInvoice(data));
     setTimeout(() => {
-      dispatch(getInvoice());
+      dispatch(getInvoices());
       reset();
       dispatch(toggleAddModal(false));
     }, 300);
@@ -105,10 +110,14 @@ const AddInvoice = () => {
         title="Add Invoice"
         labelclassName="btn-outline-dark"
         activeModal={openInvoiceModal}
+        className="max-w-5xl"
         onClose={() => dispatch(toggleAddModal(false))}
       >
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 ">
-          <div className={errors.partyName ? "has-error" : ""}>
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className="space-y-4 grid grid-cols-3 place-items-center w-full"
+        >
+          <div className={errors.partyName ? "has-error w-3/4 " : "w-3/4"}>
             <label className="form-label" htmlFor="icon_s">
               Name
             </label>
@@ -132,15 +141,18 @@ const AddInvoice = () => {
               </div>
             )}
           </div>
+          <div>
+            <label htmlFor="default-picker" className=" form-label">
+              Invoice Date
+            </label>
 
-          <Textinput
-            name="invoiceDate"
-            label="invoiceDate"
-            placeholder="Invoice Date"
-            register={register}
-            error={errors.invoiceDate}
-            type="date"
-          />
+            <Flatpickr
+              className="form-control py-2"
+              value={picker}
+              onChange={(date) => setPicker(date)}
+              id="default-picker"
+            />
+          </div>
 
           <Textinput
             type="text"
@@ -199,8 +211,8 @@ const AddInvoice = () => {
             error={errors.total}
           />
 
-          <div className="ltr:text-right rtl:text-left">
-            <button className="btn btn-dark  text-center">Add</button>
+          <div className="ltr:text-right rtl:text-left ">
+            <button className="btn btn-dark  text-center mt-10">Add</button>
           </div>
         </form>
       </Modal>

@@ -69,6 +69,7 @@ const AccountPostPage = lazy(() => import("./pages/account"));
 const BlogDetailsPage = lazy(() => import("./pages/utility/blog/blog-details"));
 const FaqPage = lazy(() => import("./pages/utility/faq"));
 const InvoicePostPage = lazy(() => import("./pages/invoice"));
+const TransactionPostPage = lazy(() => import("./pages/transaction"));
 const Settings = lazy(() => import("./pages/utility/settings"));
 const Profile = lazy(() => import("./pages/utility/profile"));
 const IconPage = lazy(() => import("./pages/icons"));
@@ -135,6 +136,7 @@ function App() {
           <Route path={"projects/:id"} element={<ProjectDetailsPage />} />
           <Route path="project-details" element={<ProjectDetailsPage />} />
           <Route path="invoice" element={<InvoicePostPage />} />
+          <Route path="transaction" element={<TransactionPostPage />} />
           <Route path="account" element={<AccountPostPage />} />
           {/* Components pages */}
           <Route path="button" element={<Button />} />

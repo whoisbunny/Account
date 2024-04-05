@@ -1,14 +1,25 @@
 import { createAction, createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import authService from "./authService";
 import { toast } from "react-toastify";
+import { Navigate } from "react-router-dom";
+import dayjs from "dayjs";
 
 // const getUserLocalStorage = window.localStorage.getItem("ADMIN")
 //   ? JSON.parse(window.localStorage.getItem("ADMIN"))
 //   : null;
 
+const initialIsAuth = () => {
+  const item = window.localStorage.getItem("isAuth");
+  return item ? JSON.parse(item) : false;
+};
+const initialDate = () => {
+  const item = window.localStorage.getItem("expiryDate");
+  return JSON.parse(item);
+};
 const initialState = {
   //   admin: getUserLocalStorage,
-  isAuth: false,
+  isAuth: initialIsAuth(),
+  // isAuth: false,
 
   isError: false,
   isLoading: false,
@@ -16,6 +27,9 @@ const initialState = {
   message: "",
   addModal: false,
   editItem: {},
+
+  expiryDate: initialDate(),
+
   editModal: false,
 };
 
@@ -47,11 +61,12 @@ export const authSlice = createSlice({
   reducers: {
     handleLogout: (state, action) => {
       window.localStorage.removeItem("TOKEN");
+      window.localStorage.removeItem("isAuth");
+      window.localStorage.removeItem("expiryDate");
+
       toast.success("User logged out successfully");
+
       state.isAuth = false;
-      setTimeout(() => {
-        window.location.replace("/");
-      }, 800);
     },
 
     openAddModal: (state, action) => {
@@ -76,15 +91,20 @@ export const authSlice = createSlice({
       })
       .addCase(login.fulfilled, (state, action) => {
         state.isLoading = false;
+        window.localStorage.setItem(
+          "expiryDate",
+          JSON.stringify(action.payload.expiryDate)
+        );
         state.isSuccess = true;
         toast.success(action.payload.message);
+
         state.isAuth = true;
+        state.expiryDate = action.payload.expiryDate;
+
+        // save isAuth in local storage
+        window.localStorage.setItem("isAuth", JSON.stringify(state.isAuth));
+
         state.isError = false;
-        if (state.isAuth && state.isSuccess) {
-          setTimeout(() => {
-            window.location.replace("/admin");
-          }, 500);
-        }
       })
       .addCase(login.rejected, (state, action) => {
         state.isLoading = false;

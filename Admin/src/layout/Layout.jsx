@@ -17,14 +17,28 @@ import { ToastContainer } from "react-toastify";
 import { useSelector } from "react-redux";
 import Loading from "@/components/Loading";
 import { motion, AnimatePresence } from "framer-motion";
+import dayjs from "dayjs";
+import { handleLogout } from "../store/features/auth/authSlice";
+import { useDispatch } from "react-redux";
 const Layout = () => {
   const { width, breakpoints } = useWidth();
   const [collapsed] = useSidebar();
   const navigate = useNavigate();
-  const { isAuth } = useSelector((state) => state.auth);
+  const { isAuth, expiryDate } = useSelector((state) => state.auth);
+const dispatch = useDispatch();
+  useEffect(() => {
+    const currentDate = dayjs();
+    const targetDate = dayjs(expiryDate);
+    if (!currentDate.isBefore(targetDate) || currentDate.isAfter(targetDate)) {
+      dispatch(handleLogout());
+      setTimeout(() => {
+        navigate("/");
+      }, 2500);
+    }
+  }, []);
 
   useEffect(() => {
-    if (isAuth || isAuth === true) {
+    if (!isAuth && !expiryDate) {
       navigate("/");
     }
   }, [isAuth, navigate]);

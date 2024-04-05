@@ -1,25 +1,32 @@
-import React, { useState, useMemo, useEffect } from "react";
+import React, { useEffect, useMemo, useState } from "react";
+import Select from "react-select";
+import Modal from "@/components/ui/Modal";
 import { useSelector, useDispatch } from "react-redux";
-import Card from "@/components/ui/Card";
-import Icon from "@/components/ui/Icon";
-import Dropdown from "@/components/ui/Dropdown";
-import { Menu } from "@headlessui/react";
-import { useNavigate } from "react-router-dom";
+import Textinput from "@/components/ui/Textinput";
+import Textarea from "@/components/ui/Textarea";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+import * as yup from "yup";
+
+import Fileinput from "../../components/ui/Fileinput";
 import {
-  useTable,
-  useRowSelect,
-  useSortBy,
+  addAccount,
+  getAccounts,
+  toggleAddModal,
+  toggleSummaryModal,
+} from "../../store/features/account/accountSlice";
+import GlobalFilter from "./GlobalFilter";
+import {
   useGlobalFilter,
   usePagination,
+  useRowSelect,
+  useSortBy,
+  useTable,
 } from "react-table";
 
-import GlobalFilter from "./GlobalFilter";
-import { deleteAccount, getAccounts, toggleSummaryModal, updateAccount } from "../../store/features/account/accountSlice";
-
-const AccountList = ({ accounts }) => {
-  
+const StatmentList = () => {
+  const { openSummaryModal } = useSelector((state) => state.account);
   const dispatch = useDispatch();
-  const navigate = useNavigate();
 
   const COLUMNS = [
     {
@@ -132,65 +139,98 @@ const AccountList = ({ accounts }) => {
     },
   ];
   const actions = [
-    {
-      name: "view",
-      icon: "heroicons-outline:eye",
-      doit: (item) => dispatch(toggleSummaryModal(true)),
-    },
-    {
-      name: "edit",
-      icon: "heroicons:pencil-square",
-      doit: (item) => dispatch(updateAccount(item)),
-    },
-    {
-      name: "delete",
-      icon: "heroicons-outline:trash",
-      doit: (item) => {
-        dispatch(deleteAccount(item._id));
-
-        setTimeout(() => {
-          dispatch(getAccounts());
-        }, 300);
-      },
-    },
+    // {
+    //   name: "view",
+    //   icon: "heroicons-outline:eye",
+    //   doit: (item) => dispatch(toggleSummaryModal(true)),
+    // },
+    // {
+    //   name: "edit",
+    //   icon: "heroicons:pencil-square",
+    //   doit: (item) => dispatch(updateAccount(item)),
+    // },
+    // {
+    //   name: "delete",
+    //   icon: "heroicons-outline:trash",
+    //   doit: (item) => {
+    //     dispatch(deleteAccount(item._id));
+    //     setTimeout(() => {
+    //       dispatch(getAccounts());
+    //     }, 300);
+    //   },
+    // },
   ];
 
-  const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => accounts, [accounts]);
-  const tableInstance = useTable(
-    {
-      columns,
-      data,
-    },
+//   const columns = useMemo(() => COLUMNS, []);
+//   const data = useMemo(() => accounts, [accounts]);
+//   const tableInstance = useTable(
+//     {
+//       columns,
+//       data,
+//     },
 
-    useGlobalFilter,
-    useSortBy,
-    usePagination,
-    useRowSelect
-  );
+//     useGlobalFilter,
+//     useSortBy,
+//     usePagination,
+//     useRowSelect
+//   );
+//   const {
+//     getTableProps,
+//     getTableBodyProps,
+//     headerGroups,
+//     footerGroups,
+//     page,
+//     nextPage,
+//     previousPage,
+//     canNextPage,
+//     canPreviousPage,
+//     pageOptions,
+//     state,
+//     gotoPage,
+//     pageCount,
+//     setPageSize,
+//     setGlobalFilter,
+//     prepareRow,
+//   } = tableInstance;
+
+//   const { globalFilter, pageIndex, pageSize } = state;
+  const FormValidationSchema = yup
+    .object({
+      //   name: yup.string().required("Name is required"),
+    })
+    .required();
+
   const {
-    getTableProps,
-    getTableBodyProps,
-    headerGroups,
-    footerGroups,
-    page,
-    nextPage,
-    previousPage,
-    canNextPage,
-    canPreviousPage,
-    pageOptions,
-    state,
-    gotoPage,
-    pageCount,
-    setPageSize,
-    setGlobalFilter,
-    prepareRow,
-  } = tableInstance;
+    register,
+    control,
+    reset,
+    formState: { errors },
+    handleSubmit,
+  } = useForm({
+    resolver: yupResolver(FormValidationSchema),
+    mode: "all",
+  });
 
-  const { globalFilter, pageIndex, pageSize } = state;
+  const onSubmit = (data) => {
+    // data.type = data.type.value;
+
+    dispatch(addAccount(data));
+    setTimeout(() => {
+      dispatch(getAccounts());
+      reset();
+      dispatch(toggleSummaryModal(false));
+    }, 300);
+  };
+
   return (
-    <>
-      <Card noborder>
+    <div>
+      <Modal
+        title="Account Summary"
+        labelclassName="btn-outline-dark"
+        activeModal={openSummaryModal}
+        onClose={() => dispatch(toggleSummaryModal(false))}
+      >
+        {/* <Card noborder>
         <div className="md:flex justify-between items-center mb-6">
           <h4 className="card-title">Account List</h4>
           <div>
@@ -324,9 +364,10 @@ const AccountList = ({ accounts }) => {
             </li>
           </ul>
         </div>
-      </Card>
-    </>
+        </Card> */}
+      </Modal>
+    </div>
   );
 };
 
-export default AccountList;
+export default StatmentList;

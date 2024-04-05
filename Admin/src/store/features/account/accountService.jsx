@@ -1,7 +1,7 @@
 import API from "../../../configs/API";
 
 const getAccounts = async () => {
-  const res = await API.get(`account`);
+  const res = await API.get(`account?type=Creditor`);
   return res.data;
 };
 const getAccount = async (data) => {

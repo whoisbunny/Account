@@ -40,7 +40,6 @@ const RegForm = () => {
   const navigate = useNavigate();
 
   const onSubmit = (data) => {
-    // dispatch(handleRegister(data));
     dispatch(addAdmin(data));
 
     setTimeout(() => {

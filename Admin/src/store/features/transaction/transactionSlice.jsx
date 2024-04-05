@@ -1,83 +1,79 @@
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 import { toast } from "react-toastify";
-import accountService from "./accountService";
+import transactionService from "./transactionService";
 
-export const getAccounts = createAsyncThunk(
-  "account/get-accounts",
+export const getTransactions = createAsyncThunk(
+  "Transaction/get-Transactions",
   async (thunkAPI) => {
     try {
-      return await accountService.getAccounts();
+      return await transactionService.getTrans();
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-export const addAccount = createAsyncThunk(
-  "account/add-account",
+export const addTransaction = createAsyncThunk(
+  "Transaction/add-Transaction",
   async (data, thunkAPI) => {
     console.log(data);
     try {
-      return await accountService.addAccount(data);
+      return await transactionService.addTran(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-export const deleteAccount = createAsyncThunk(
-  "account/delete-account",
+export const deleteTransaction = createAsyncThunk(
+  "Transaction/delete-Transaction",
   async (data, thunkAPI) => {
     try {
-      return await accountService.deleteAccount(data);
+      return await transactionService.deleteTran(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-export const editAccount = createAsyncThunk(
-  "account/update-account",
+export const editTransaction = createAsyncThunk(
+  "Transaction/update-Transaction",
   async (data, thunkAPI) => {
     try {
-      return await accountService.updateAccount(data);
+      return await transactionService.updateTran(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
-export const getAccount = createAsyncThunk(
-  "account/get-account",
+export const getTransaction = createAsyncThunk(
+  "Transaction/get-Transaction",
   async (data, thunkAPI) => {
     try {
-      return await accountService.getAccount(data);
+      return await transactionService.getTran(data);
     } catch (error) {
       return thunkAPI.rejectWithValue(error);
     }
   }
 );
 
-export const accountSlice = createSlice({
-  name: "account",
+export const transactionSlice = createSlice({
+  name: "transaction",
   initialState: {
-    accounts: [],
-    openAccountModal: false,
-    openSummaryModal: false,
+    transactions: [],
+    openTransactionModal: false,
     isLoading: null,
     editItem: {},
-    account: {},
+    transaction: {},
     editModal: false,
   },
   reducers: {
     toggleAddModal: (state, action) => {
-      state.openAccountModal = action.payload;
-    },
-    toggleSummaryModal: (state, action) => {
-      state.openSummaryModal = action.payload;
+      state.openTransactionModal = action.payload;
     },
     toggleEditModal: (state, action) => {
       state.editModal = action.payload;
     },
 
-    updateAccount: (state, action) => {
+    updateTransaction: (state, action) => {
       // update project and  store it into editItem when click edit button
 
       state.editItem = action.payload;
@@ -87,70 +83,71 @@ export const accountSlice = createSlice({
 
   extraReducers: (builder) => {
     builder
-      .addCase(getAccounts.pending, (state) => {
+      .addCase(getTransactions.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAccounts.fulfilled, (state, action) => {
+      .addCase(getTransactions.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.accounts = action.payload;
+        state.transactions = action.payload;
+        state.total = action.payload?.results;
       })
-      .addCase(getAccounts.rejected, (state, action) => {
+      .addCase(getTransactions.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload?.response?.data?.message);
       })
-      .addCase(addAccount.pending, (state) => {
+      .addCase(addTransaction.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(addAccount.fulfilled, (state, action) => {
+      .addCase(addTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.newAccount = action.payload;
+        state.newTransaction = action.payload;
         toast.success(action.payload?.message);
       })
-      .addCase(addAccount.rejected, (state, action) => {
+      .addCase(addTransaction.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload?.response?.data?.message);
       })
-      .addCase(editAccount.pending, (state) => {
+      .addCase(editTransaction.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(editAccount.fulfilled, (state, action) => {
+      .addCase(editTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
 
         state.editItem = {};
         toast.success(action.payload.message);
       })
-      .addCase(editAccount.rejected, (state, action) => {
+      .addCase(editTransaction.rejected, (state, action) => {
         state.isLoading = false;
         state.editItem = {};
         toast.error(action.payload?.response?.data?.message);
       })
-      .addCase(deleteAccount.pending, (state) => {
+      .addCase(deleteTransaction.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(deleteAccount.fulfilled, (state, action) => {
+      .addCase(deleteTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
 
         toast.success(action.payload.message);
       })
-      .addCase(deleteAccount.rejected, (state, action) => {
+      .addCase(deleteTransaction.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload?.response?.data?.message);
       })
-      .addCase(getAccount.pending, (state) => {
+      .addCase(getTransaction.pending, (state) => {
         state.isLoading = true;
       })
-      .addCase(getAccount.fulfilled, (state, action) => {
+      .addCase(getTransaction.fulfilled, (state, action) => {
         state.isLoading = false;
-        state.account = action.payload;
+        state.transaction = action.payload.Transaction;
         toast.success(action.payload.message);
       })
-      .addCase(getAccount.rejected, (state, action) => {
+      .addCase(getTransaction.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload?.response?.data?.message);
       });
   },
 });
 
-export const { toggleAddModal, toggleEditModal, updateAccount, toggleSummaryModal } =
-  accountSlice.actions;
-export default accountSlice.reducer;
+export const { toggleAddModal, toggleEditModal, updateTransaction } =
+  transactionSlice.actions;
+export default transactionSlice.reducer;

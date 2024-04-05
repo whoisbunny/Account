@@ -16,7 +16,7 @@ import {
 import GlobalFilter from "./GlobalFilter";
 import {
   deleteInvoice,
-  getInvoice,
+  getInvoices,
   updateInvoice,
 } from "../../store/features/invoice/invoiceSlice";
 import dayjs from "dayjs";
@@ -154,7 +154,7 @@ const InvoicesList = ({ invoices }) => {
         dispatch(deleteInvoice(item._id));
 
         setTimeout(() => {
-          dispatch(getInvoice());
+          dispatch(getInvoices());
         }, 300);
       },
     },

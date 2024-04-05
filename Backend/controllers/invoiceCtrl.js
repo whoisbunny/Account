@@ -5,9 +5,22 @@ const INVOICE = require("../models/InvoiceModal");
 // Controller for creating a new invoice
 const createInvoice = async (req, res) => {
   try {
+    console.log(req.body);
+    const existBill = await INVOICE.findOne({
+      partyName: req.body.partyName,
+      invoiceNumber: req.body.invoiceNumber,
+    });
+    console.log("existBill", existBill);
+    if (existBill) {
+      return res.status(404).json({
+        status: "fail",
+        message: "Invoice is already registered",
+      });
+    }
     const invoice = await INVOICE.create(req.body);
     res.status(201).json({
       status: "success",
+      message: "Invoice added successfully",
 
       invoice,
     });

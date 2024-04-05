@@ -75,7 +75,8 @@ const EditAccount = () => {
   }, [editItem]);
 
   const onSubmit = (data) => {
-        data.type = data.type.value;
+        // data.type = data.type.value;
+    data.type = "Creditor";
 
     let data2 = {
       id: editItem?._id,
@@ -127,7 +128,7 @@ const EditAccount = () => {
           register={register}
           error={errors.address}
         />
-        <div className={errors.type ? "has-error" : ""}>
+        {/* <div className={errors.type ? "has-error" : ""}>
           <label className="form-label" htmlFor="icon_s">
             Account Type
           </label>
@@ -162,7 +163,7 @@ const EditAccount = () => {
               {errors.type?.message || errors.type?.label.message}
             </div>
           )}
-        </div>
+        </div> */}
 
         <div className="ltr:text-right rtl:text-left">
           <button className="btn btn-dark  text-center">Update</button>

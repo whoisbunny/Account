@@ -8,6 +8,9 @@ const Login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+
+
+
     // Find user by email
     const user = await USER.findOne({ email });
     if (!user) {
@@ -37,6 +40,10 @@ const Login = async (req, res) => {
 const Signup = async (req, res) => {
   try {
     const { username, email, password } = req.body;
+        const existingCount = await USER.find();
+        if (existingCount) {
+          return res.status(404).json({ message: "You can not add Admin" });
+        }
 
     const hashedPassword = await bcrypt.hash(password, 10);
     // Check if the email is already registered

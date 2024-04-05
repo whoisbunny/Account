@@ -23,6 +23,12 @@ export const menuItems = [
     isHide: true,
     link: "account",
   },
+  {
+    title: "Transaction",
+    icon: "heroicons-outline:document",
+    isHide: true,
+    link: "transaction",
+  },
 
   // {
   //   isHeadr: true,

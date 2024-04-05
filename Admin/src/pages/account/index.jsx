@@ -11,6 +11,7 @@ import AccountList from "./AccountList";
 import AddAccount from "./AddAccount";
 import EditAccount from "./EditAccount";
 import { getAccounts, toggleAddModal } from "../../store/features/account/accountSlice";
+import StatmentList from "./StatmentList";
 
 const AccountPostPage = () => {
   const [filler, setfiller] = useState("list");
@@ -64,6 +65,7 @@ const AccountPostPage = () => {
       )}
       <AddAccount />
       <EditAccount />
+      <StatmentList />
     </div>
   );
 };

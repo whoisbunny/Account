@@ -14,17 +14,17 @@ import {
 } from "react-table";
 
 import GlobalFilter from "./GlobalFilter";
-import { deleteAccount, getAccounts, toggleSummaryModal, updateAccount } from "../../store/features/account/accountSlice";
+import dayjs from "dayjs";
+import { deleteTransaction, getTransactions, updateTransaction } from "../../store/features/transaction/transactionSlice";
 
-const AccountList = ({ accounts }) => {
-  
+const TransactionList = ({ transactions }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const COLUMNS = [
     {
-      Header: "Name",
-      accessor: "name",
+      Header: "partyName",
+      accessor: "partyName.name",
       Cell: (row) => {
         return (
           <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
@@ -44,15 +44,17 @@ const AccountList = ({ accounts }) => {
       },
     },
     {
-      Header: "Address",
-      accessor: "address",
+      Header: "date",
+      accessor: "date",
       Cell: (row) => {
         return (
           <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
             <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row?.cell?.value?.length > 20
+              {/* {row?.cell?.value?.length > 20
                 ? row?.cell?.value?.substring(0, 20) + "..."
-                : row?.cell?.value}
+                : row?.cell?.value} */}
+
+              {dayjs(row?.cell?.value).format("DD.MM.YYYY")}
             </div>
           </div>
         );
@@ -60,8 +62,8 @@ const AccountList = ({ accounts }) => {
     },
 
     {
-      Header: "Phone Number",
-      accessor: "phoneNumber",
+      Header: "amount",
+      accessor: "amount",
       Cell: (row) => {
         return (
           <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
@@ -72,19 +74,19 @@ const AccountList = ({ accounts }) => {
         );
       },
     },
-    {
-      Header: "GST Number",
-      accessor: "gst",
-      Cell: (row) => {
-        return (
-          <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
-            <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row.cell?.value}
-            </div>
-          </div>
-        );
-      },
-    },
+    // {
+    //   Header: "GST Number",
+    //   accessor: "gst",
+    //   Cell: (row) => {
+    //     return (
+    //       <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
+    //         <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+    //           {row.cell?.value}
+    //         </div>
+    //       </div>
+    //     );
+    //   },
+    // },
 
     {
       Header: "action",
@@ -132,31 +134,31 @@ const AccountList = ({ accounts }) => {
     },
   ];
   const actions = [
-    {
-      name: "view",
-      icon: "heroicons-outline:eye",
-      doit: (item) => dispatch(toggleSummaryModal(true)),
-    },
+    // {
+    //   name: "view",
+    //   icon: "heroicons-outline:eye",
+    //   doit: (item) => navigate(`/admin/product/${item._id}`),
+    // },
     {
       name: "edit",
       icon: "heroicons:pencil-square",
-      doit: (item) => dispatch(updateAccount(item)),
+      doit: (item) => dispatch(updateTransaction(item)),
     },
     {
       name: "delete",
       icon: "heroicons-outline:trash",
       doit: (item) => {
-        dispatch(deleteAccount(item._id));
+        dispatch(deleteTransaction(item._id));
 
         setTimeout(() => {
-          dispatch(getAccounts());
+          dispatch(getTransactions());
         }, 300);
       },
     },
   ];
 
   const columns = useMemo(() => COLUMNS, []);
-  const data = useMemo(() => accounts, [accounts]);
+  const data = useMemo(() => transactions, [transactions]);
   const tableInstance = useTable(
     {
       columns,
@@ -192,7 +194,7 @@ const AccountList = ({ accounts }) => {
     <>
       <Card noborder>
         <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">Account List</h4>
+          <h4 className="card-title">Transactions List</h4>
           <div>
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
           </div>
@@ -329,4 +331,4 @@ const AccountList = ({ accounts }) => {
   );
 };
 
-export default AccountList;
+export default TransactionList;

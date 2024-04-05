@@ -51,6 +51,9 @@ const Profile = () => {
       icon: "heroicons-outline:login",
       action: () => {
         dispatch(handleLogout());
+        setTimeout(() => {
+          navigate("/");
+        }, 2500);
       },
     },
   ];
