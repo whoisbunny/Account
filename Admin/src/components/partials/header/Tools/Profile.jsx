@@ -42,7 +42,7 @@ const Profile = () => {
       icon: "heroicons-outline:user",
 
       action: () => {
-        navigate("/profile");
+        navigate("/admin/profile");
       },
     },
 
