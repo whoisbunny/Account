@@ -50,7 +50,7 @@ const InvoicesList = ({ invoices }) => {
 
     {
       Header: "Date",
-      accessor: "invoiceDate",
+      accessor: "date",
       Cell: (row) => {
         return (
           <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">

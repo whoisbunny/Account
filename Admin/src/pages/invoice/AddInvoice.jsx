@@ -70,7 +70,7 @@ const AddInvoice = () => {
   const onSubmit = (data) => {
     var {
       partyName,
-      invoiceDate,
+      date,
       invoiceNumber,
       productName,
       quantity,
@@ -80,7 +80,7 @@ const AddInvoice = () => {
       total,
     } = data;
 
-    data.invoiceDate = picker;
+    data.date = picker;
     data.partyName = data.partyName.value;
     data.grossTotal;
 

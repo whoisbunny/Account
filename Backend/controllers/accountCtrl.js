@@ -1,9 +1,10 @@
 const ACCOUNT = require("../models/AccountModal");
+const INVOICE = require("../models/InvoiceModal");
+const TRANSACTION = require("../models/TransactionModal");
 
 // Controller to create a new account
-const createAccount =  async(req, res) => {
-  try { 
-    
+const createAccount = async (req, res) => {
+  try {
     const newAccount = new ACCOUNT(req.body);
     await newAccount.save();
     return res
@@ -13,10 +14,10 @@ const createAccount =  async(req, res) => {
     console.error("Error creating account:", error);
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
 // Controller to get all accounts
-const getAllAccounts = async(req, res) => {
+const getAllAccounts = async (req, res) => {
   try {
     const type = req.query.type;
     if (type) {
@@ -29,10 +30,10 @@ const getAllAccounts = async(req, res) => {
     console.error("Error getting accounts:", error);
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
 // Controller to get a single account by ID
-const getAccountById =async(req, res) => {
+const getAccountById = async (req, res) => {
   try {
     const accountId = req.params.id;
     const account = await ACCOUNT.findById(accountId);
@@ -44,10 +45,10 @@ const getAccountById =async(req, res) => {
     console.error("Error getting account by ID:", error);
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
 // Controller to update an existing account
-const updateAccount =async(req, res) => {
+const updateAccount = async (req, res) => {
   try {
     const accountId = req.params.id;
     const updatedAccount = await ACCOUNT.findByIdAndUpdate(
@@ -66,7 +67,7 @@ const updateAccount =async(req, res) => {
     console.error("Error updating account:", error);
     return res.status(500).json({ message: error.message });
   }
-}
+};
 
 // Controller to delete an account
 const deleteAccount = async (req, res) => {
@@ -85,6 +86,30 @@ const deleteAccount = async (req, res) => {
     return res.status(500).json({ message: error.message });
   }
 };
+const getSummary = async (req, res) => {
+  try {
+    const id = req.params.id;
+    const account = await ACCOUNT.findById(id)
+    const transactions = await TRANSACTION.find({ partyName: id }).populate(
+      "referenceOfInvoices"
+    );
+    const invoices = await INVOICE.find({ partyName: id });
+    let data = [...transactions, ...invoices];
+    data.sort((a, b) => a.date - b.date);
+
+    console.log(data);
+    res.status(200).json({
+      status: "success",
+      account,
+      data,
+    });
+  } catch (err) {
+    res.status(500).json({
+      status: "error",
+      message: err.message,
+    });
+  }
+};
 
 module.exports = {
   createAccount,
@@ -92,4 +117,5 @@ module.exports = {
   getAccountById,
   updateAccount,
   deleteAccount,
+  getSummary,
 };

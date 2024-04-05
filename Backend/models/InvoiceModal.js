@@ -6,7 +6,7 @@ const invoiceSchema = new mongoose.Schema({
     ref: "Account",
   },
 
-  invoiceDate: {
+  date: {
     type: Date,
     default: Date.now,
   },

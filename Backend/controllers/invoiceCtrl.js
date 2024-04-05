@@ -88,7 +88,7 @@ const updateInvoice = async (req, res) => {
     }
     res.status(200).json({
       status: "success",
-
+      message: "Invoice successfully updated",
       invoice,
     });
   } catch (err) {

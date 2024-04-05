@@ -8,12 +8,17 @@ import { useForm, Controller } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 
+import Card from "@/components/ui/Card";
+import Icon from "@/components/ui/Icon";
+import Dropdown from "@/components/ui/Dropdown";
+import { Menu } from "@headlessui/react";
+
 import Fileinput from "../../components/ui/Fileinput";
 import {
   addAccount,
+  closeSummaryModal,
   getAccounts,
   toggleAddModal,
-  toggleSummaryModal,
 } from "../../store/features/account/accountSlice";
 import GlobalFilter from "./GlobalFilter";
 import {
@@ -23,73 +28,83 @@ import {
   useSortBy,
   useTable,
 } from "react-table";
+import dayjs from "dayjs";
 
 const StatmentList = () => {
-  const { openSummaryModal } = useSelector((state) => state.account);
+  const { openSummaryModal, accountSummary, account } = useSelector(
+    (state) => state.account
+  );
+  const dispatch = useDispatch();
+
+  return (
+    <div>
+      <Modal
+        title={`Account Summary - ${account?.name}`}
+        labelclassName="btn-outline-dark"
+        className="max-w-5xl"
+        activeModal={openSummaryModal}
+        onClose={() => dispatch(closeSummaryModal(false))}
+      >
+        <TableContent detail={accountSummary} />
+      </Modal>
+    </div>
+  );
+};
+
+const TableContent = ({ detail }) => {
   const dispatch = useDispatch();
 
   const COLUMNS = [
     {
-      Header: "Name",
-      accessor: "name",
+      Header: "Date",
+      accessor: "date",
       Cell: (row) => {
         return (
           <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
-            <div className="flex-none">
-              <div className="h-10 w-10 rounded-full text-sm bg-[#E0EAFF] dark:bg-slate-700 flex flex-col items-center justify-center font-medium -tracking-[1px]">
-                {row?.cell?.value?.charAt(0) +
-                  row?.cell?.value?.charAt(row?.cell?.value.length - 1)}
-              </div>
-            </div>
             <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row?.cell?.value?.length > 20
-                ? row?.cell?.value?.substring(0, 20) + "..."
-                : row?.cell?.value}
+              {/* &#x20B9; */}
+              {dayjs(row.cell?.value).format("DD/MM/YYYY")}
             </div>
           </div>
         );
       },
     },
     {
-      Header: "Address",
-      accessor: "address",
+      Header: "TYPE",
+      accessor: "type",
       Cell: (row) => {
         return (
-          <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
-            <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row?.cell?.value?.length > 20
-                ? row?.cell?.value?.substring(0, 20) + "..."
-                : row?.cell?.value}
-            </div>
+          <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
+            <span
+              className={` inline-block px-3 min-w-[90px] text-center mx-auto py-1 rounded-[999px] bg-opacity-25 
+            ${
+              row?.cell?.value === "Purchase"
+                ? "text-warning-500 bg-warning-500"
+                : ""
+            }
+            ${
+              row?.cell?.value === "Payment"
+                ? "text-success-500 bg-success-500"
+                : ""
+            }
+            
+             `}
+            >
+              {row?.cell?.value}
+            </span>
           </div>
         );
       },
     },
 
     {
-      Header: "Phone Number",
-      accessor: "phoneNumber",
+      Header: "amount",
+      accessor: `amount`,
       Cell: (row) => {
-        return (
-          <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
-            <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row.cell?.value}
-            </div>
-          </div>
-        );
-      },
-    },
-    {
-      Header: "GST Number",
-      accessor: "gst",
-      Cell: (row) => {
-        return (
-          <div className="flex space-x-3 items-center text-left rtl:space-x-reverse">
-            <div className="flex-1 font-medium text-sm leading-4 whitespace-nowrap">
-              {row.cell?.value}
-            </div>
-          </div>
-        );
+        console.log(row.row);
+        const { total, amount } = row.row.original;
+        const displayAmount = total !== undefined ? total : amount;
+        return <span>&#x20B9; {displayAmount}</span>;
       },
     },
 
@@ -100,16 +115,17 @@ const StatmentList = () => {
         return (
           <div>
             <Dropdown
-              classMenuItems="right-0 w-[140px] top-[110%] "
+              classMenuItems="right-0 w-[140px] top-[-100%] "
               label={
-                <span className="text-xl text-center block w-full">
+                <span classNam e="text-xl text-center block w-full">
                   <Icon icon="heroicons-outline:dots-vertical" />
                 </span>
               }
             >
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800 ">
                 {actions.map((item, i) => (
                   <Menu.Item
+                  
                     key={i}
                     onClick={() => item.doit(row?.row?.original)}
                   >
@@ -138,106 +154,69 @@ const StatmentList = () => {
       },
     },
   ];
+
   const actions = [
-    // {
-    //   name: "view",
-    //   icon: "heroicons-outline:eye",
-    //   doit: (item) => dispatch(toggleSummaryModal(true)),
-    // },
     // {
     //   name: "edit",
     //   icon: "heroicons:pencil-square",
-    //   doit: (item) => dispatch(updateAccount(item)),
+    //   doit: (item) => dispatch(updateData(item)),
     // },
-    // {
-    //   name: "delete",
-    //   icon: "heroicons-outline:trash",
-    //   doit: (item) => {
-    //     dispatch(deleteAccount(item._id));
-    //     setTimeout(() => {
-    //       dispatch(getAccounts());
-    //     }, 300);
-    //   },
-    // },
+    {
+      name: "delete",
+      icon: "heroicons-outline:trash",
+      doit: (item) => {
+        dispatch(deleteAssign(item._id));
+
+        setTimeout(() => {
+          dispatch(getAllAssign());
+        }, 500);
+      },
+    },
   ];
+  const columns = useMemo(() => COLUMNS, []);
+  const data = useMemo(() => detail, []);
 
-//   const columns = useMemo(() => COLUMNS, []);
-//   const data = useMemo(() => accounts, [accounts]);
-//   const tableInstance = useTable(
-//     {
-//       columns,
-//       data,
-//     },
+  const tableInstance = useTable(
+    {
+      columns,
+      data,
+    },
 
-//     useGlobalFilter,
-//     useSortBy,
-//     usePagination,
-//     useRowSelect
-//   );
-//   const {
-//     getTableProps,
-//     getTableBodyProps,
-//     headerGroups,
-//     footerGroups,
-//     page,
-//     nextPage,
-//     previousPage,
-//     canNextPage,
-//     canPreviousPage,
-//     pageOptions,
-//     state,
-//     gotoPage,
-//     pageCount,
-//     setPageSize,
-//     setGlobalFilter,
-//     prepareRow,
-//   } = tableInstance;
-
-//   const { globalFilter, pageIndex, pageSize } = state;
-  const FormValidationSchema = yup
-    .object({
-      //   name: yup.string().required("Name is required"),
-    })
-    .required();
-
+    useGlobalFilter,
+    useSortBy,
+    usePagination,
+    useRowSelect
+  );
   const {
-    register,
-    control,
-    reset,
-    formState: { errors },
-    handleSubmit,
-  } = useForm({
-    resolver: yupResolver(FormValidationSchema),
-    mode: "all",
-  });
+    getTableProps,
+    getTableBodyProps,
+    headerGroups,
+    footerGroups,
+    page,
+    nextPage,
+    previousPage,
+    canNextPage,
+    canPreviousPage,
+    pageOptions,
+    state,
+    gotoPage,
+    pageCount,
+    setPageSize,
+    setGlobalFilter,
+    prepareRow,
+  } = tableInstance;
 
-  const onSubmit = (data) => {
-    // data.type = data.type.value;
-
-    dispatch(addAccount(data));
-    setTimeout(() => {
-      dispatch(getAccounts());
-      reset();
-      dispatch(toggleSummaryModal(false));
-    }, 300);
-  };
+  const { globalFilter, pageIndex, pageSize } = state;
 
   return (
-    <div>
-      <Modal
-        title="Account Summary"
-        labelclassName="btn-outline-dark"
-        activeModal={openSummaryModal}
-        onClose={() => dispatch(toggleSummaryModal(false))}
-      >
-        {/* <Card noborder>
-        <div className="md:flex justify-between items-center mb-6">
-          <h4 className="card-title">Account List</h4>
+    <>
+      <Card noborder>
+        <div className="md:flex justify-between items-center mb-2">
+          <p className="card-title">{detail[0]?.deliveryBoyId?.username}</p>
           <div>
             <GlobalFilter filter={globalFilter} setFilter={setGlobalFilter} />
           </div>
         </div>
-
         <div className="overflow-x-auto -mx-6">
           <div className="inline-block min-w-full align-middle">
             <div className="overflow-hidden ">
@@ -245,7 +224,7 @@ const StatmentList = () => {
                 className="min-w-full divide-y divide-slate-100 table-fixed dark:divide-slate-700"
                 {...getTableProps}
               >
-                <thead className=" bg-slate-100 dark:bg-slate-700">
+                <thead className=" border-t border-slate-100 dark:border-slate-800">
                   {headerGroups.map((headerGroup) => (
                     <tr {...headerGroup.getHeaderGroupProps()}>
                       {headerGroup.headers.map((column) => (
@@ -276,10 +255,7 @@ const StatmentList = () => {
                   {page.map((row) => {
                     prepareRow(row);
                     return (
-                      <tr
-                        {...row.getRowProps()}
-                        className=" even:bg-slate-100 dark:even:bg-slate-700"
-                      >
+                      <tr {...row.getRowProps()}>
                         {row.cells.map((cell) => {
                           return (
                             <td {...cell.getCellProps()} className="table-td">
@@ -343,7 +319,7 @@ const StatmentList = () => {
                   className={` ${
                     pageIdx === pageIndex
                       ? "bg-slate-900 dark:bg-slate-600  dark:text-slate-200 text-white font-medium "
-                      : "bg-slate-100  dark:text-slate-400 text-slate-900  font-normal "
+                      : "bg-slate-100 dark:bg-slate-700 dark:text-slate-400 text-slate-900  font-normal  "
                   }    text-sm rounded leading-[16px] flex h-6 w-6 items-center justify-center transition-all duration-150`}
                   onClick={() => gotoPage(pageIdx)}
                 >
@@ -364,9 +340,8 @@ const StatmentList = () => {
             </li>
           </ul>
         </div>
-        </Card> */}
-      </Modal>
-    </div>
+      </Card>
+    </>
   );
 };
 

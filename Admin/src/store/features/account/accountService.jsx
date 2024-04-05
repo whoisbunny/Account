@@ -8,6 +8,10 @@ const getAccount = async (data) => {
   const res = await API.get(`account/${data}`);
   return res.data;
 };
+const getAccountSummary = async (data) => {
+  const res = await API.get(`account/summary/${data}`);
+  return res.data;
+};
 const addAccount = async (data) => {
   const res = await API.post(`account`, data);
   return res.data;
@@ -27,6 +31,7 @@ const accountService = {
   deleteAccount,
   updateAccount,
   getAccount,
+  getAccountSummary,
 };
 
 export default accountService;

@@ -14,10 +14,14 @@ import {
 } from "react-table";
 
 import GlobalFilter from "./GlobalFilter";
-import { deleteAccount, getAccounts, toggleSummaryModal, updateAccount } from "../../store/features/account/accountSlice";
+import {
+  deleteAccount,
+  getAccountSummary,
+  getAccounts,
+  updateAccount,
+} from "../../store/features/account/accountSlice";
 
 const AccountList = ({ accounts }) => {
-  
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
@@ -100,9 +104,10 @@ const AccountList = ({ accounts }) => {
                 </span>
               }
             >
-              <div className="divide-y divide-slate-100 dark:divide-slate-800">
+              <div className="divide-y divide-slate-100 dark:divide-slate-800 ">
                 {actions.map((item, i) => (
                   <Menu.Item
+                    className="z-50"
                     key={i}
                     onClick={() => item.doit(row?.row?.original)}
                   >
@@ -135,7 +140,7 @@ const AccountList = ({ accounts }) => {
     {
       name: "view",
       icon: "heroicons-outline:eye",
-      doit: (item) => dispatch(toggleSummaryModal(true)),
+      doit: (item) => dispatch(getAccountSummary(item?._id)),
     },
     {
       name: "edit",

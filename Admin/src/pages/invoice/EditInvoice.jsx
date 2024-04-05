@@ -12,7 +12,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { toast } from "react-toastify";
 import FormGroup from "@/components/ui/FormGroup";
-import { toggleEditModal } from "../../store/features/invoice/invoiceSlice";
+import { editInvoice, getInvoices, toggleEditModal } from "../../store/features/invoice/invoiceSlice";
 import { Label } from "recharts";
 import { getAccounts } from "../../store/features/account/accountSlice";
 
@@ -48,11 +48,7 @@ const EditInvoice = () => {
   accounts.forEach((element) => {
     options.push({ value: element?._id, label: element.name });
   });
-  const FormValidationSchema = yup
-    .object({
-      name: yup.string().required("Title is required"),
-    })
-    .required();
+  const FormValidationSchema = yup.object({}).required();
 
   const {
     register,
@@ -71,38 +67,46 @@ const EditInvoice = () => {
   }, [editItem]);
 
   const onSubmit = (data) => {
-    // const {
-    //   name,
-    //   description,
-    //   category,
-    //   quantity,
-    //   price,
-    //   thumbnailImage,
-    //   galleryImages,
-    // } = data;
-    // const formData = new FormData();
-    // formData.append("name", name);
-    // formData.append("description", description);
-    // formData.append("category", category?.value);
-    // formData.append("price", price);
-    // formData.append("quantity", quantity);
-    // formData.append("thumbnailImage", images ? images : thumbnailImage);
-    // selectedFiles2
-    //   ? selectedFiles2.forEach((file) => {
-    //       formData.append("galleryImages", file);
-    //     })
-    //   : formData.append("galleryImages", JSON.stringify(galleryImages));
-    // let data2 = {
-    //   id: editItem?._id,
-    //   formData: formData,
-    // };
-    // dispatch(editProducts(data2));
-    // setTimeout(() => {
-    //   dispatch(resetImageState());
-    //   dispatch(getProducts());
-    //   dispatch(toggleEditModal(false));
-    //   reset();
-    // }, 300);
+        var {
+          partyName,
+          date,
+          invoiceNumber,
+          productName,
+          quantity,
+          price,
+          discount,
+          gst,
+          total,
+        } = data;
+
+        data.date = picker;
+        data.partyName = data.partyName.value;
+        data.grossTotal;
+
+        if (
+          quantity === undefined ||
+          quantity === null ||
+          (quantity === 0 && price === 0) ||
+          price === null ||
+          price === undefined
+        ) {
+          data.grossTotal = 0;
+        } else {
+          data.grossTotal = price * quantity;
+        }
+
+        const data2 = {
+          id:editItem?._id,
+          formData:data
+
+        }
+
+        dispatch(editInvoice(data2));
+        setTimeout(() => {
+          dispatch(getInvoices());
+          reset();
+          dispatch(toggleEditModal(false));
+        }, 300);
   };
 
   return (
@@ -128,9 +132,9 @@ const EditInvoice = () => {
                 classNamePrefix="select"
                 id="icon_s"
                 defaultInputValue={{
-                  value: editItem.partyName._id,
+                  value: editItem.partyName?._id,
 
-                  label: editItem.partyName.name,
+                  label: editItem.partyName?.name,
                 }}
               />
             )}
@@ -150,7 +154,7 @@ const EditInvoice = () => {
             className="form-control py-2"
             value={picker}
             onChange={(date) => setPicker(date)}
-            defaultValue={editItem.invoiceDate}
+            defaultValue={editItem.date}
             id="default-picker"
           />
         </div>

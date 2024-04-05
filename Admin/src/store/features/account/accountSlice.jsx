@@ -55,6 +55,19 @@ export const getAccount = createAsyncThunk(
   }
 );
 
+export const getAccountSummary = createAsyncThunk(
+  "account/get-summary",
+  async (data, thunkAPI) => {
+    try {
+      return await accountService.getAccountSummary(data);
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error);
+    }
+  }
+);
+
+
+
 export const accountSlice = createSlice({
   name: "account",
   initialState: {
@@ -64,14 +77,17 @@ export const accountSlice = createSlice({
     isLoading: null,
     editItem: {},
     account: {},
+    accountSummary:{},
     editModal: false,
   },
   reducers: {
     toggleAddModal: (state, action) => {
       state.openAccountModal = action.payload;
     },
-    toggleSummaryModal: (state, action) => {
-      state.openSummaryModal = action.payload;
+    
+    closeSummaryModal: (state, action) => {
+      state.openSummaryModal =  action.payload
+
     },
     toggleEditModal: (state, action) => {
       state.editModal = action.payload;
@@ -147,10 +163,29 @@ export const accountSlice = createSlice({
       .addCase(getAccount.rejected, (state, action) => {
         state.isLoading = false;
         toast.error(action.payload?.response?.data?.message);
+      })
+      .addCase(getAccountSummary.pending, (state) => {
+        state.isLoading = true;
+      })
+      .addCase(getAccountSummary.fulfilled, (state, action) => {
+        state.isLoading = false;
+              state.openSummaryModal = !state.openSummaryModal;
+              state.accountSummary = action.payload?.data;
+              state.account = action.payload?.account
+;
+      })
+      .addCase(getAccountSummary.rejected, (state, action) => {
+        state.isLoading = false;
+        toast.error(action.payload?.response?.data?.message);
       });
   },
 });
 
-export const { toggleAddModal, toggleEditModal, updateAccount, toggleSummaryModal } =
-  accountSlice.actions;
+export const {
+  toggleAddModal,
+  toggleEditModal,
+  updateAccount,
+  // toggleSummaryModal,
+  closeSummaryModal,
+} = accountSlice.actions;
 export default accountSlice.reducer;
